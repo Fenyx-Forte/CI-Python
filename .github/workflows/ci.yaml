@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'src/*.py'
+      - 'src/**/*.py'
+      - 'tests/*.py'
+      - 'tests/**/*.py'
+
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'src/*.py'
+      - 'src/**/*.py'
+      - 'tests/*.py'
+      - 'tests/**/*.py'
+
+  workflow_dispatch:
+
+concurrency:
+ group: ${{ github.workflow }}-${{ github.ref }}
+ cancel-in-progress: true
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+          version: "0.5.7"
+
+      - name: Instalar as dependencias
+        run: uv sync --frozen --all-extras --all-groups
+
+      - name: Audit - Bandit
+        run: uv run bandit -c pyproject.toml -r src/ tests/
+
+      - name: Linter - Ruff
+        run: uv run ruff check --config pyproject.toml
+
+      - name: Type Checker - Pyright
+        run: uv run pyright
+
+      - name: Tests - Pytest
+        run: uv run pytest
+
+      - name: Minimize uv cache
+        run: uv cache prune --ci
