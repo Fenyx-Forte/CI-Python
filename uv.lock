@@ -35,8 +35,10 @@ dev = [
     { name = "bandit" },
     { name = "pre-commit" },
     { name = "pyright" },
-    { name = "pytest" },
     { name = "ruff" },
+]
+testes = [
+    { name = "pytest" },
 ]
 
 [package.metadata]
@@ -46,9 +48,9 @@ dev = [
     { name = "bandit", specifier = ">=1.8.0" },
     { name = "pre-commit", specifier = ">=4.0.1" },
     { name = "pyright", specifier = ">=1.1.390" },
-    { name = "pytest", specifier = ">=8.3.4" },
     { name = "ruff", specifier = ">=0.8.2" },
 ]
+testes = [{ name = "pytest", specifier = ">=8.3.4" }]
 
 [[package]]
 name = "colorama"
