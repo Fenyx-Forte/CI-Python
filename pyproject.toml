@@ -50,6 +50,7 @@ ignore = [
     #### specific rules
     "E501",   # line too long
     "S101",   # assert
+    "PLR2004", # hardcoded numbers
 ]
 
 [tool.bandit]
